@@ -13,29 +13,10 @@ const awsCertificateFilePath = path.join(
 
 fs.readFileSync(awsCertificateFilePath).toString();
 
-// for migrations
-const migrationClient = postgres(env.DATABASE_URL, {
-  max: 1,
+const client = postgres(env.DATABASE_URL, {
   ssl: {
     ca: fs.readFileSync(awsCertificateFilePath).toString(),
   },
 });
 
-// TODO delete test select
-try {
-  const currentDbTime = await migrationClient`
-    select now()
-  `;
-  console.log("✅  Connected to the database", currentDbTime);
-} catch (error) {
-  console.error("❌  Error connecting to the database:", error);
-}
-
-// for query purposes
-const queryClient = postgres(env.DATABASE_URL, {
-  ssl: {
-    ca: fs.readFileSync(awsCertificateFilePath).toString(),
-  },
-});
-
-export const db = drizzle(queryClient, { schema });
+export const db = drizzle(client, { schema });

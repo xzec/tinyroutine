@@ -6,6 +6,14 @@ import { api } from "~/utils/api";
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const users = api.user.getAll.useQuery();
+  const userMutation = api.user.create.useMutation();
+
+  const handleCreateUser = () => {
+    const email = "juro.zec.1+01@gmail.com";
+    userMutation.mutate({ email });
+    void users.refetch();
+  };
 
   return (
     <>
@@ -45,8 +53,24 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+              {hello.data ? hello.data.greeting : "Loading tRPC Hello query..."}
             </p>
+            {users.data
+              ? users.data.map((u) => (
+                  <p
+                    key={u.id}
+                    className="self-start font-mono text-lg text-white"
+                  >
+                    {`${u.id}, ${u.email}, ${u.name}`}
+                  </p>
+                ))
+              : "Loading tRPC Users query..."}
+            <button
+              className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+              onClick={handleCreateUser}
+            >
+              Create user
+            </button>
             <AuthShowcase />
           </div>
         </div>
