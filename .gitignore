@@ -40,3 +40,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# IntelliJ
+.idea/dataSources
+.idea/dataSources.xml
+.idea/dataSources.local.xml
